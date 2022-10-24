@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import ErrorComponent from "./components/ErrorComponent";
 import Root from "./Root";
 import About from "./screens/About";
+import Followers from "./screens/Followers";
 import Home from "./screens/Home";
 import NotFound from "./screens/NotFound";
 import User from "./screens/users/User";
@@ -23,6 +24,12 @@ const router = createBrowserRouter([
       {
         path: "users/:userId",
         element: <User />,
+        children: [
+          {
+            path: "followers",
+            element: <Followers />,
+          },
+        ],
       },
     ],
     errorElement: <NotFound />,
