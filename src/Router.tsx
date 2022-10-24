@@ -1,18 +1,32 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Header from "./components/Header";
+import { createBrowserRouter } from "react-router-dom";
+import ErrorComponent from "./components/ErrorComponent";
+import Root from "./Root";
 import About from "./screens/About";
 import Home from "./screens/Home";
+import NotFound from "./screens/NotFound";
+import User from "./screens/users/User";
 
-function Router() {
-  return (
-    <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    children: [
+      {
+        path: "",
+        element: <Home />,
+        errorElement: <ErrorComponent />,
+      },
+      {
+        path: "about",
+        element: <About />,
+      },
+      {
+        path: "users/:userId",
+        element: <User />,
+      },
+    ],
+    errorElement: <NotFound />,
+  },
+]);
 
-export default Router;
+export default router;
