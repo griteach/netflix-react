@@ -6,12 +6,22 @@ import Root from "./Root";
 import { theme } from "./theme";
 import { RouterProvider } from "react-router-dom";
 import router from "./Router";
+import { createGlobalStyle } from "styled-components";
+import reset from "styled-reset";
+
+const GlobalStyle = createGlobalStyle`
+  ${reset}
+  *{
+    box-sizing: border-box;
+  }
+`;
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
+    <GlobalStyle />
     <ThemeProvider theme={theme}>
       <RouterProvider router={router} />
     </ThemeProvider>

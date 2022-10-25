@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import ErrorComponent from "./components/ErrorComponent";
 import Root from "./Root";
-import About from "./screens/About";
-import Followers from "./screens/Followers";
+import Tv from "./screens/Tv";
+
 import Home from "./screens/Home";
 import NotFound from "./screens/NotFound";
-import User from "./screens/users/User";
+import Search from "./screens/Search";
 
 const router = createBrowserRouter([
   {
@@ -18,18 +18,12 @@ const router = createBrowserRouter([
         errorElement: <ErrorComponent />,
       },
       {
-        path: "about",
-        element: <About />,
+        path: "tv",
+        element: <Tv />,
       },
       {
-        path: "users/:userId",
-        element: <User />,
-        children: [
-          {
-            path: "followers",
-            element: <Followers />,
-          },
-        ],
+        path: "search",
+        element: <Search />,
       },
     ],
     errorElement: <NotFound />,
