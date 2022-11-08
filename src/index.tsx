@@ -15,6 +15,10 @@ const GlobalStyle = createGlobalStyle`
   *{
     box-sizing: border-box;
   }
+  body{
+    color:${(props) => props.theme.white.darker};
+    background-color:black;
+  }
 `;
 
 const client = new QueryClient();
@@ -26,8 +30,8 @@ root.render(
   <React.StrictMode>
     <RecoilRoot>
       <QueryClientProvider client={client}>
-        <GlobalStyle />
         <ThemeProvider theme={theme}>
+          <GlobalStyle />
           <RouterProvider router={router} />
         </ThemeProvider>
       </QueryClientProvider>
