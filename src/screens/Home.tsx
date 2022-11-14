@@ -4,7 +4,7 @@ import { users } from "../db";
 import { getMovies, IGetMoviesResult } from "../api";
 import styled from "styled-components";
 import { makeImagePath } from "../utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { useState } from "react";
 
 const Wrapper = styled.div`
@@ -66,6 +66,15 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   }
 `;
 
+const Overlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+`;
+
 const Info = styled(motion.div)`
   padding: 20px;
   background-color: ${(props) => props.theme.black.lighter};
@@ -125,7 +134,7 @@ const offset = 6;
 function Home() {
   const navigate = useNavigate();
   const bigMovieMatch = useMatch(`/movies/:movieId`);
-
+  const { scrollY } = useScroll();
   const { data, isLoading } = useQuery<IGetMoviesResult>(
     ["movies", "nowPlaying"],
     getMovies
@@ -148,6 +157,7 @@ function Home() {
     navigate(`/movies/${movieId}`);
   };
 
+  const onOverlayClick = () => navigate(-1);
   return (
     <Wrapper>
       {isLoading ? (
@@ -198,19 +208,26 @@ function Home() {
           </Slider>
           <AnimatePresence>
             {bigMovieMatch ? (
-              <motion.div
-                layoutId={bigMovieMatch.params.movieId + ""}
-                style={{
-                  position: "absolute",
-                  width: "40vw",
-                  height: "80vh",
-                  backgroundColor: "red",
-                  top: 50,
-                  left: 0,
-                  right: 0,
-                  margin: "0 auto",
-                }}
-              />
+              <>
+                <Overlay
+                  onClick={() => onOverlayClick()}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                />
+                <motion.div
+                  layoutId={bigMovieMatch.params.movieId + ""}
+                  style={{
+                    position: "absolute",
+                    width: "40vw",
+                    height: "80vh",
+                    backgroundColor: "red",
+                    top: scrollY.get() + 80,
+                    left: 0,
+                    right: 0,
+                    margin: "0 auto",
+                  }}
+                />
+              </>
             ) : null}
           </AnimatePresence>
         </>
