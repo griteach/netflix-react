@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { makeImagePath } from "../utils";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { useState } from "react";
+import { url } from "inspector";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -48,6 +49,7 @@ const Row = styled(motion.div)`
   grid-template-columns: repeat(6, 1fr);
   position: absolute;
   width: 100%;
+  overflow: hidden;
 `;
 const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-color: white;
@@ -87,6 +89,41 @@ const Info = styled(motion.div)`
     text-align: center;
     color: white;
   }
+`;
+
+const BigMovie = styled(motion.div)`
+  position: absolute;
+  width: 40vw;
+  height: 80vh;
+  background-color: ${(props) => props.theme.black.lighter};
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 15px;
+`;
+
+const BigCover = styled.div`
+  width: 100%;
+  height: 400px;
+  background-size: cover;
+  background-position: center center;
+`;
+
+const BigOverview = styled.p`
+  padding: 20px;
+  color: ${(props) => props.theme.white.lighter};
+  position: relative;
+  top: -50px;
+  font-size: 14px;
+`;
+
+const BigTitle = styled.h3`
+  color: ${(props) => props.theme.white.lighter};
+  padding: 20px;
+  position: relative;
+  font-size: 26px;
+  top: -50px;
 `;
 
 const rowVariants = {
@@ -158,6 +195,13 @@ function Home() {
   };
 
   const onOverlayClick = () => navigate(-1);
+  const clickedMovie =
+    bigMovieMatch?.params.movieId &&
+    data?.results.find(
+      (movie) => movie.id + "" === bigMovieMatch.params.movieId
+    );
+  console.log(clickedMovie);
+
   return (
     <Wrapper>
       {isLoading ? (
@@ -214,19 +258,25 @@ function Home() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 />
-                <motion.div
+                <BigMovie
                   layoutId={bigMovieMatch.params.movieId + ""}
-                  style={{
-                    position: "absolute",
-                    width: "40vw",
-                    height: "80vh",
-                    backgroundColor: "red",
-                    top: scrollY.get() + 80,
-                    left: 0,
-                    right: 0,
-                    margin: "0 auto",
-                  }}
-                />
+                  style={{ top: scrollY.get() + 80 }}
+                >
+                  {clickedMovie && (
+                    <>
+                      <BigCover
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent),url(${makeImagePath(
+                            clickedMovie.backdrop_path,
+                            "w500"
+                          )})`,
+                        }}
+                      />
+                      <BigTitle>{clickedMovie.title}</BigTitle>
+                      <BigOverview>{clickedMovie.overview}</BigOverview>
+                    </>
+                  )}
+                </BigMovie>
               </>
             ) : null}
           </AnimatePresence>
